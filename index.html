@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>  
+	<meta charset="utf-8">
+	<title>Sheets (confirmation lightbox)</title>
+	<link href="sheet.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="overlay"></div>
+
+<ul class="media-wrap clearfix">
+	<li class="media" data-confirm="123">
+
+		<div class="media-hd clearfix">
+		    <a class="art" href="#">
+		    	<img src="http://placehold.it/100" alt="">
+		    </a>
+		</div>
+
+		<div class="media-bd">
+			<h3 class="meta-title">
+				<a class="ellipsis" href="#">Item1</a>
+			</h3>
+	        <button class="js-btn-buy" type="button">Buy</button>
+		    <div class="confirm-data hidden">
+		        <p>Confirm: Title 1</p>
+		        <form action="/" class="dl-form">
+		            <button type="button" class="btn--primary">Buy</button>
+		        </form>
+		    </div>
+		</div>
+	</li>
+
+	<li class="media" data-confirm="456">
+
+		<div class="media-hd clearfix">
+		    <a class="art" href="#">
+		    	<img src="http://placehold.it/100" alt="">
+		    </a>
+		</div>
+
+		<div class="media-bd">
+			<h3 class="meta-title">
+				<a class="ellipsis" href="#">Item 2</a>
+			</h3>
+	        <button class="js-btn-buy" type="button">Buy</button>
+		    <div class="confirm-data hidden">
+		        <p>Confirm: Title 2</p>
+		        <form action="/" class="dl-form">
+		            <button type="button" class="btn--primary">Buy</button>
+		        </form>
+		    </div>
+		</div>
+	</li>
+
+	<li class="media" data-confirm="789">
+
+		<div class="media-hd clearfix">
+		    <a class="art" href="#">
+		    	<img src="http://placehold.it/100" alt="">
+		    </a>
+		</div>
+
+		<div class="media-bd">
+			<h3 class="meta-title">
+				<a class="ellipsis" href="#">Item 3</a>
+			</h3>
+	        <button class="js-btn-buy" type="button">Buy</button>
+		    <div class="confirm-data hidden">
+		        <p>Confirm: Title 3</p>
+		        <form action="/" class="dl-form">
+		            <button type="button" class="btn--primary">Buy</button>
+		        </form>
+		    </div>
+		</div>
+	</li>
+
+</ul>
+
+<div class="hidden sheet" id="sheet-confirm" role="dialog" aria-label=""></div>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="sheet.js"></script>
+
+</body>
+</html>
