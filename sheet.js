@@ -1,50 +1,46 @@
-var sheets = (function(){
+var sheet = (function(){
 
 	//if sheet div isn't in the html, add it
-	if (document.getElementById("sheet-confirm") == null){
-		var confSheet = $("body").append("<div id='sheet-confirm' class='hidden sheet' role='dialog' aria-label=''></div>");
+	if (document.getElementById("sheet") == null){
+		var $sheet = $("body").append("<div id='sheet' class='hidden' role='dialog' aria-label=''><div class='sheet-content'></div><div class='js-close-sheet'>x</div></div>");
 	}
+	var $sheet = $("#sheet"),
+		$sheetContent = $sheet.find(".sheet-content");
 
 	return {
-		//add hook to body for css or whatnot
-		setPromptState: function() {
-			$('body').addClass("state-prompt");
-		},
 
 		//remove all sheets and body state
-		blurPrompt: function() {
-			$("body").removeClass("state-prompt");
-			$(".sheet").fadeOut().html("").attr("aria-label","");
-			$("#overlay").fadeOut(200);
+		dismiss: function() {
+			$sheet.fadeOut(50).attr("aria-label","");
+			$sheetContent.html("");
+			$("#overlay").fadeOut(100);
 		},
 
 		//show overlay div, passing callback to presumably show sheet
 		initOverlay: function(callback) {
-			$('#overlay').fadeIn(200, callback);		
+			$('#overlay').fadeIn(100, callback);		
 		},
-
-		//loads confirmation info into sheet and shows it
-		showConfirmSheet: function(html) {
-			var $confSheet = $("#sheet-confirm");
-			this.setPromptState();
 		
+		//loads confirmation info into sheet and shows it
+		show: function(html) {
 			this.initOverlay(
-				function(){$confSheet.append(html).fadeIn(300).removeClass("hidden").attr('aria-label','Confirm your purchase').attr('tab-index','-1').focus()}
+				function() {
+					$sheetContent.append(html);
+					$sheet.fadeIn(200).removeClass("hidden").attr('aria-label','Confirm your purchase').attr('tab-index','-1').focus();
+				}
 			);
 		}
-	
 	}
-
 })();
 
 
 //add event listener to document filtered by selector 
 $(document)
-	.on("click","#overlay", function(e){
+	.on("click","#overlay", function(e) {
 		//assuming here that clicking on an overlay is equivalent to blur on sheet. Reset page state.
-			sheets.blurPrompt();
+			sheet.dismiss();
 	})
-	.on("click", ".js-btn-buy", function(e){
+	.on("click", ".js-btn-buy", function(e) {
 
 		var $confirmHtml = $(e.target).closest(".media").find(".confirm-data").html();
 
@@ -52,6 +48,7 @@ $(document)
 		if ($confirmHtml) {
 			e.preventDefault();
 			e.stopPropagation();
-			sheets.showConfirmSheet($confirmHtml);
+			sheet.show($confirmHtml);
 		}
 	});
+$(".js-close-sheet").on("click",function(){sheet.dismiss()});
