@@ -16,7 +16,4 @@ Sheet is a jquery plugin that displays a lightbox-style modal for inline content
  
 ##Todo
 
-* fix animation
-* testing video player for CD trailers (using callback to trigger mejs)
 * browser testing
-* namespacing for CD use?
