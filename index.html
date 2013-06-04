@@ -2,87 +2,67 @@
 <html lang="en-us">
 <head>  
 	<meta charset="utf-8">
-	<title>Sheets (confirmation lightbox)</title>
+	<title>sheet plugin</title>
 	<link href="sheet.css" rel="stylesheet">
 </head>
 <body>
 
-<div id="overlay"></div>
+<h1>sheet.js</h1>
+<p>A small jquery plugin for displaying inline content in lightbox-style.</p>
+<p>Requires overylay.js</p>
 
-<ul class="media-wrap clearfix">
-	<li class="media" data-confirm="123">
+<button type="button" class="js-sheet-show" data-sheet-content="content1" data-sheet-title="injected content title">Sheet 1</button>
+<button type="button" class="js-sheet-show" data-sheet-content="content2" data-sheet-title="injected content title">Sheet 2</button>
 
-		<div class="media-hd clearfix">
-		    <a class="art" href="#">
-		    	<img src="http://placehold.it/100" alt="">
-		    </a>
-		</div>
 
-		<div class="media-bd">
-			<h3 class="meta-title">
-				<a class="ellipsis" href="#">Item1</a>
-			</h3>
-	        <button class="js-btn-buy" type="button">Buy</button>
-		    <div class="confirm-data hidden">
-		        <p>Confirm: Title 1</p>
-		        <form action="/" class="dl-form">
-		            <button type="button" class="btn--primary">Buy</button>
-		        </form>
-		    </div>
-		</div>
-	</li>
+<button type="button" class="cssHook js-sheet-show" data-sheet-content="content3" id="lastStep">Sheet 3</button>
 
-	<li class="media" data-confirm="456">
-
-		<div class="media-hd clearfix">
-		    <a class="art" href="#">
-		    	<img src="http://placehold.it/100" alt="">
-		    </a>
-		</div>
-
-		<div class="media-bd">
-			<h3 class="meta-title">
-				<a class="ellipsis" href="#">Item 2</a>
-			</h3>
-	        <button class="js-btn-buy" type="button">Buy</button>
-		    <div class="confirm-data hidden">
-		        <p>Confirm: Title 2</p>
-		        <form action="/" class="dl-form">
-		            <button type="button" class="btn--primary">Buy</button>
-		        </form>
-		    </div>
-		</div>
-	</li>
-
-	<li class="media" data-confirm="789">
-
-		<div class="media-hd clearfix">
-		    <a class="art" href="#">
-		    	<img src="http://placehold.it/100" alt="">
-		    </a>
-		</div>
-
-		<div class="media-bd">
-			<h3 class="meta-title">
-				<a class="ellipsis" href="#">Item 3</a>
-			</h3>
-	        <button class="js-btn-buy" type="button">Buy</button>
-		    <div class="confirm-data hidden">
-		        <p>Confirm: Title 3</p>
-		        <form action="/" class="dl-form">
-		            <button type="button" class="btn--primary">Buy</button>
-		        </form>
-		    </div>
-		</div>
-	</li>
-
+<h2>Features</h2>
+<ul>
+	<li>Pequeño: 2.3k uncompressed (Google Closure brings it down to 1.14KB and 563 bytes gzipped)</li>
+	<li>Uses aria-hidden, aria-labelledby, and role="alertdialog" for accessibility</li>
+	<li>Uses CSS transitions for animation (CSS file is just a base, meant to be built up).</li>
+	<li>It's responsive, duh</li>
+	<li>Uses data attributes to define modal content and headline (js contains no content)</li>
+	<li>Binds a single click event (on the document), using natural bubbling to handle target</li>
+	<li>Can load sheets from within a sheet (replaces current sheet content). Good for progressive content, like a step-by-step "how to" wizard.</li>
+	<li>onOpen and onClose callbacks </li>
+	<li>clicking outside of sheet dismisses the sheet (as a rule)</li>
 </ul>
+ 
 
-<div class="hidden sheet" id="sheet-confirm" role="dialog" aria-label=""></div>
+<h2>Todo</h2>
+<ul>
+	<li>fix animation</li>
+	<li>testing video player for CD trailers (using callback to trigger mejs)</li>
+	<li>browser testing</li>
+	<li>namespacing for CD use?</li>
+</ul>
+ 
 
+<div class="hidden">
+	<div id="content1">Sheet Content 1</div>
+	<div id="content2">Sheet Content 2. <a href="#content3" class="js-sheet-show" data-sheet-content="content3">link to 3rd sheet</a> </div>
+	<div id="content3">Sheet Content 3 <button type="button" class="js-sheet-close">Close</a></div>
+</div>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="overlay.js"></script>
 <script src="sheet.js"></script>
+
+<script type="text/javascript">
+
+	$(function(){
+		$("#sheet").sheet({
+			sheetEndPos :	"30px",
+			onClose:function() {
+				console.log('closed')
+			}
+		})
+	});
+
+</script>
+
 
 </body>
 </html>
