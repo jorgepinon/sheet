@@ -1,54 +1,112 @@
-var sheet = (function(){
-
-	//if sheet div isn't in the html, add it
-	if (document.getElementById("sheet") == null){
-		var $sheet = $("body").append("<div id='sheet' class='hidden' role='dialog' aria-label=''><div class='sheet-content'></div><div class='js-close-sheet'>x</div></div>");
-	}
-	var $sheet = $("#sheet"),
-		$sheetContent = $sheet.find(".sheet-content");
-
-	return {
-
-		//remove all sheets and body state
-		dismiss: function() {
-			$sheet.fadeOut(50).attr("aria-label","");
-			$sheetContent.html("");
-			$("#overlay").fadeOut(100);
-		},
-
-		//show overlay div, passing callback to presumably show sheet
-		initOverlay: function(callback) {
-			$('#overlay').fadeIn(100, callback);		
-		},
+/*
+	sheet plugin
+		- displays a lightbox-style div
+		- content taken from an inline element with id
+		- triggers require class 'js-sheet-show', and data-sheet-content pointing to the inline div
+		- optional data-sheet-title
 		
-		//loads confirmation info into sheet and shows it
-		show: function(html) {
-			this.initOverlay(
-				function() {
-					$sheetContent.append(html);
-					$sheet.fadeIn(200).removeClass("hidden").attr('aria-label','Confirm your purchase').attr('tab-index','-1').focus();
-				}
-			);
-		}
-	}
-})();
+		example:
+		<button type="button" class="js-sheet-show" data-sheet-content="someInlineDiv" data-sheet-title="This will be the sheet's title text">Trigger sheet</button>
+		
+		the plugin can be instantiated on document ready, like this
+		$(function(){
+			$("#sheet").sheet()
+		});
+		
+		or bound to an event, like this
+		$("#sheet").sheet({onClose:function(){alert('closed')}})
 
+*/
 
-//add event listener to document filtered by selector 
-$(document)
-	.on("click","#overlay", function(e) {
-		//assuming here that clicking on an overlay is equivalent to blur on sheet. Reset page state.
-			sheet.dismiss();
-	})
-	.on("click", ".js-btn-buy", function(e) {
+(function($){
+ 
+    $.fn.extend({ 
+         
+        sheet: function(options) {
 
-		var $confirmHtml = $(e.target).closest(".media").find(".confirm-data").html();
+		    var defaults = {
+				sheetStartPos :	"-100px",
+				sheetEndPos :	"30px",
+				onOpen :		function() {},
+				onClose :		function() {}
+		    };
 
-		//pass hidden confirm data to show on confirmation sheet
-		if ($confirmHtml) {
-			e.preventDefault();
-			e.stopPropagation();
-			sheet.show($confirmHtml);
-		}
-	});
-$(".js-close-sheet").on("click",function(){sheet.dismiss()});
+		    options = $.extend({},defaults, options);
+
+	        var init = function() {
+
+		        overlay.init();
+
+				$(document)
+					.on("click",function(e) {
+
+						$target = $(e.target);
+
+						/* assuming that clicking on an overlay is equivalent to dismissing the sheet. */
+						if(e.target.id == "overlay" || $target.hasClass("js-sheet-close")) {
+							meth.dismissSheet();
+
+						} else if ($target.hasClass("js-sheet-show")) {
+							var markup = $("#"+$(e.target).data("sheet-content")).html(),
+								title = $(e.target).data("sheet-title");
+
+							/* pass hidden content to confirmation sheet */
+							if (markup) {
+								e.preventDefault();
+								e.stopPropagation();
+								
+								if ($target.closest($("#sheet")).length > 0) {
+									meth.loadSheet(markup,title);
+								} else {
+									meth.launchSheet(markup,title);
+								}
+							}
+						}
+					});
+	        };
+
+	        /* Run initializer */
+	        init();
+
+			var $sheet = $("#sheet"),
+				sheetDiv = document.getElementById("sheet"),
+				$sheetTitle = $sheet.find(".sheet-title"),
+				$sheetContent = $sheet.find(".sheet-content");
+
+			sheetDiv.style.top = options.sheetStartPos;
+
+			var meth = {
+		        launchSheet: function(html,title) {
+					overlay.show(
+						meth.loadSheet(html,title)
+					);
+		        },
+
+		        loadSheet: function(html,title) {
+					$sheet.fadeOut(10);		
+					$sheetContent.html(html);
+					$sheetTitle.text(title);
+					$sheet.fadeIn(50, function(){
+						$(this).removeClass("hidden").attr('aria-hidden','false').attr('tab-index','-1').focus();
+						sheetDiv.style.top = options.sheetEndPos;	
+						options.onOpen.call(this);
+					});
+		        },
+
+		        dismissSheet: function() {
+					$sheet.fadeOut(30, function(){
+						$(this).attr("aria-hidden","true");
+						sheetDiv.style.top = options.sheetStartPos;
+						$sheetContent.html("");
+						$("#overlay").fadeOut(200, function(){
+							options.onClose.call(this);
+						});
+					});
+		        }
+		    }
+	    }
+
+    });
+
+})(jQuery);
+
