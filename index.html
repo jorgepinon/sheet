@@ -7,59 +7,79 @@
 </head>
 <body>
 
-<h1>sheet.js</h1>
-<p>A small jquery plugin for displaying inline content in lightbox-style.</p>
-<p>Requires overlay.js</p>
+<h1>jQuery Sheet Plugin</h1>
 
-<button type="button" class="js-sheet-show" data-sheet-content="content1" data-sheet-title="injected content title">Sheet 1</button>
-<button type="button" class="js-sheet-show" data-sheet-content="content2" data-sheet-title="injected content title">Sheet 2</button>
+<p>A small (and well, opinionated) lightbox-style plugin for notifications. A trigger element (can use &lt;a&gt; or href attr or a data attribute on any other element to target local, in-page html and clones it into sheet to display over an overlay. A basic sheet consists of a title and any html content.</p>
 
-
-<button type="button" class="cssHook js-sheet-show" data-sheet-content="content3" id="lastStep">Sheet 3</button>
-
-<h2>Features</h2>
 <ul>
-	<li>Pequeño: 2.3k uncompressed (Google Closure brings it down to 1.14KB and 563 bytes gzipped)</li>
-	<li>Uses aria-hidden, aria-labelledby, and role="alertdialog" for accessibility</li>
-	<li>Uses CSS transitions for animation (CSS file is just a base, meant to be built up).</li>
-	<li>It's responsive, duh</li>
-	<li>Uses data attributes to define modal content and headline (js contains no content)</li>
-	<li>Binds a single click event (on the document), using natural bubbling to handle target</li>
-	<li>Can load sheets from within a sheet (replaces current sheet content). Good for progressive content, like a step-by-step "how to" wizard.</li>
-	<li>onOpen and onClose callbacks </li>
-	<li>clicking outside of sheet dismisses the sheet (as a rule)</li>
+	<li>settings can be html data attributes or as an options object passed via the plugin instantiation</li>
+	<li>Small js and css files</li>
+	<li>Support for aria events</li>
+	<li>One or multiple triggers on a page &ndash; each with it's own settings.</li>
+	<li>Triggers can be anything on the page, including within an active sheet</li>
+	<li>Uses CSS Transforms for smooth animation</li>
+	<li>OnOpen and onClose callbacks</li>
+	<li>tiny to large screens</li>
 </ul>
- 
+	
+<h2>Examples</h2>
+	<a class="js-sheet-show" id="sheet1trigger" title="sheet1 title" href="#sheet1">Simple &lt;a&gt; trigger</a> (href and title define sheet content)
+	<br><br>
+	
+	<button class="js-sheet-show btn--simple" type="button" id="sheet2trigger" data-sheet-content="#sheet2">Button trigger</button> <span>data-sheet-content attribute and sheet title passed via js</span>
+	<br><br>
 
-<h2>Todo</h2>
-<ul>
-	<li>fix animation</li>
-	<li>testing video player for CD trailers (using callback to trigger mejs)</li>
-	<li>browser testing</li>
-	<li>namespacing for CD use?</li>
-</ul>
- 
+	<a href="#trailer-container" id="js-trigger-video" class="js-sheet-show btn--simple" title="Test for video playing on sheet callback">Trailer</a>
+	<br><br>
 
-<div class="hidden">
-	<div id="content1">Sheet Content 1</div>
-	<div id="content2">Sheet Content 2. <a href="#content3" class="js-sheet-show" data-sheet-content="content3">link to 3rd sheet</a> </div>
-	<div id="content3">Sheet Content 3 <button type="button" class="js-sheet-close">Close</a></div>
-</div>
+	<div class="hidden">
+	
+		<div id="sheet1">
+			<img src="http://placehold.it/540x225" alt=""> 
+			<br>
+			<a href="#sheet2" class="js-sheet-show">See sheet 2</a>
+		</div>
+		
+		<div id="sheet2">Sheet2 content. Hey, how about <a href="#sheet1" class="js-sheet-show" title="Sheet1 again! (this title on the previous link's title attr. Cool!)">Sheet1 again</a></div>
+		
+		<div id="trailer-container">
+			<video controls width="100%">
+				<source src="http://video-js.zencoder.com/oceans-clip.mp4" type="video/mp4"></source>
+				<source src="http://video-js.zencoder.com/oceans-clip.webm" type="video/webm"></source>
+			</video>
+		</div>
+
+
 
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="overlay.js"></script>
-<script src="sheet.js"></script>
+<script src="jquery.sheet.js"></script>
 
 <script type="text/javascript">
 
-	$(function(){
-		$("#sheet").sheet({
-			sheetEndPos :	"30px",
-			onClose:function() {
-				console.log('closed')
-			}
-		})
-	});
+$(document).ready(function(){
+
+    $('#sheet1trigger').sheet({
+    	title:'Sheet1 title (overridden by data attr)',
+    	customClass: 'customClass added here'
+    });
+
+    $('#sheet2trigger').sheet({
+    	title:'sheet2 title (via options object)',
+    	customClass: 'sheet--bordered'
+    });
+
+    $('#js-trigger-video').sheet({
+    	customClass: 'video',
+    	autoplayVideo: true,
+    	onOpen: function() { 
+    		console.log('onOpen callback for video sheet');
+    	},
+    	onClose: function() { 
+    		console.log('onClose callback for video sheet');
+    	}
+    });
+
+});
 
 </script>
 
