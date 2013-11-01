@@ -6,7 +6,7 @@
 	overflow : hidden; 	
 }
 
-/* overlay and sheet base styles */
+/* sheet plugin base styles */
 #overlay {
 	display: none;
 	width: 100%;
@@ -52,13 +52,19 @@
 	position: absolute;
 	top: 0;
 	right: 0;
-	height: 40px;
 	width: 40px;
+	padding: 10px 0;
+	border-radius: 0 6px 0 0;
+	text-align: center;
 	cursor: pointer;
+	font-size: 20px;
+	color: #fff;
+	background: red;
 }
 
-/* for demo only */
+/* sheet plugin demo styles */
 .sheet--bordered {
 	box-shadow: 0px 0px 0px 20px rgba(0,0,0,0.6);
 	border-radius: 15px;
 }
+

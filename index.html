@@ -23,31 +23,41 @@
 </ul>
 	
 <h2>Examples</h2>
-	<a class="js-sheet-show" id="sheet1trigger" title="sheet1 title" href="#sheet1">Simple &lt;a&gt; trigger</a> (href and title define sheet content)
-	<br><br>
-	
-	<button class="js-sheet-show btn--simple" type="button" id="sheet2trigger" data-sheet-content="#sheet2">Button trigger</button> <span>data-sheet-content attribute and sheet title passed via js</span>
-	<br><br>
 
-	<a href="#trailer-container" id="js-trigger-video" class="js-sheet-show btn--simple" title="Test for video playing on sheet callback">Trailer</a>
-	<br><br>
+<a class="js-sheet-show" title="title attribute defines sheet title" href="#sheet1">Simple &lt;a&gt; trigger</a> (with classname and href but no plugin assigned)
+<br><br>
 
-	<div class="hidden">
+<a class="js-sheet-show" id="sheet1trigger" href="#sheet1">&lt;a&gt; trigger</a> (href for content, title via plugin assignment)
+<br><br>
+
+<button class="js-sheet-show btn--simple" type="button" id="sheet2trigger" data-sheet-content="#sheet2">Button trigger</button>
+<span>data-sheet-content attribute and sheet title passed via js</span>
+<br><br>
+
+<a href="#trailer-container" id="js-trigger-video" class="js-sheet-show btn--simple" title="Test for video playing on sheet callback">Trailer</a>
+<br><br>
+
+<div class="hidden">
+
+	<div id="sheet1">
+		<img src="http://placehold.it/540x225" alt=""> 
+		<br>
+		<a href="#sheet2" class="js-sheet-show">See sheet 2</a>
+	</div>
 	
-		<div id="sheet1">
-			<img src="http://placehold.it/540x225" alt=""> 
-			<br>
-			<a href="#sheet2" class="js-sheet-show">See sheet 2</a>
-		</div>
-		
-		<div id="sheet2">Sheet2 content. Hey, how about <a href="#sheet1" class="js-sheet-show" title="Sheet1 again! (this title on the previous link's title attr. Cool!)">Sheet1 again</a></div>
-		
-		<div id="trailer-container">
-			<video controls width="100%">
-				<source src="http://video-js.zencoder.com/oceans-clip.mp4" type="video/mp4"></source>
-				<source src="http://video-js.zencoder.com/oceans-clip.webm" type="video/webm"></source>
-			</video>
-		</div>
+	<div id="sheet2">
+		Sheet2 content. Hey, how about <a href="#sheet1" class="js-sheet-show" title="Sheet1 again! (this title on the previous link's title attr. Cool!)">Sheet1 again</a>
+	</div>
+	
+	<div id="trailer-container">
+		<video controls width="100%">
+			<source src="http://video-js.zencoder.com/oceans-clip.mp4" type="video/mp4"></source>
+			<source src="http://video-js.zencoder.com/oceans-clip.webm" type="video/webm"></source>
+		</video>
+	</div>
+	
+</div>
+
 
 
 
@@ -65,7 +75,13 @@ $(document).ready(function(){
 
     $('#sheet2trigger').sheet({
     	title:'sheet2 title (via options object)',
-    	customClass: 'sheet--bordered'
+    	customClass: 'sheet--bordered',
+    	onOpen: function() { 
+    		console.log('onOpen sheet2');
+    	},
+    	onClose: function() { 
+    		console.log('onClose sheet2');
+    	}
     });
 
     $('#js-trigger-video').sheet({

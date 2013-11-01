@@ -32,8 +32,10 @@
 
 			display: function (opts, contentSrc, title) {
 
+				opts = $.extend( {}, defaults, opts );
+
 				title = title || opts.title;
-				
+
 				var clonedHtml = $(contentSrc).clone(true);
 
 				if (sheetActive) {
@@ -51,11 +53,17 @@
 		};
 
 		function dismissSheet(opts) {
+
+			// if dismissed via .sheet's data attr, use default opts
+			opts = opts || defaults;
+
 			$('.sheet').stop().fadeOut(200, function() {
 				$('#overlay').stop().fadeOut(200, function() {
 					$('.sheet').remove();
 					$('#overlay').html('');
-					opts.onClose.apply();
+					if(typeof opts.onClose == 'function'){
+						opts.onClose.call();
+					}
 				});
 			});
 			sheetActive = false;
@@ -73,9 +81,11 @@
 
 		function loadSheet(opts, clonedHtml, title) {
 
-			$('.sheet').find(".sheet-title").html(title);
+			$sh = $('.sheet');
 
-			$('.sheet').find(".sheet-content")
+			$sh.find(".sheet-title").html(title);
+
+			$sh.find(".sheet-content")
 				.fadeOut(50,function(){
 					$(this).html(clonedHtml);
 					$(this).find($('*[id]')).each(function(){$(this).attr('id',$(this).attr('id') + '-s')});
@@ -86,12 +96,17 @@
 					}
 				});
 
-			$('.sheet')
-				.attr('class','sheet ' + opts.customClass)
+			$sh.attr('class','sheet ' + opts.customClass)
 				.fadeIn(100)
 				.css('top', opts.endTopPos);
+			
+			//store method to dismiss sheet using js: $('.sheet').data('dismiss')()
+			$sh.data('dismiss', dismissSheet);
 
-			opts.onOpen.apply()
+			if(typeof opts.onOpen == 'function'){
+				opts.onOpen.call();
+			}
+
 		}
 
 		function playVideo(context) {
@@ -118,13 +133,16 @@
 					sheetTitle = $target.attr('title') || $target.data('sheet-title'),
 					sheetContentSrc = $target.attr('href') || $target.data('sheet-content');
 
-				instanceOpts = $.extend( {}, base.settings, instance.settings );
+				instanceOpts = $.extend( {}, defaults, instance.settings );
 
-				base.display(instanceOpts, sheetContentSrc, sheetTitle);
+				base.display(instance.settings, sheetContentSrc, sheetTitle);
 
 			}
 
 			if(e.target.id == "overlay" || $target.hasClass("js-sheet-close")) {
+				e.preventDefault();
+				e.stopPropagation();
+
 				base.dismiss(instanceOpts);
 			} 
 
